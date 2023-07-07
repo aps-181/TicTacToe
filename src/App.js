@@ -1,25 +1,42 @@
 import { useState } from "react"
 
-function Square({ value, onSquareClick }) {
+const Square = ({ value, onSquareClick }) => {
 
 
   return <button className="square" onClick={onSquareClick}>{value}</button>
 }
 
-export default function Board() {
+const Board = () => {
 
   const [xIsNext, setXIsNext] = useState(true)
   const [squares, setSquares] = useState(Array(9).fill(null))
 
-  const winner = calculateWinner(squares)
-  let status
-  if (winner) {
-    status = "Winner: " + winner
-  } else {
-    status = "Next player: " + (xIsNext ? "X" : "O")
+
+  const calculateWinner = (squares) => {
+ 
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],           
+      [0, 4, 8],           
+      [2, 4, 6],           
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8]
+    ]
+
+    for (let winningCombination of winningCombinations) {
+      const [a, b, c] = winningCombination
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a]
+      }
+
+    }
+
+   return null  
   }
 
-  function handleClick(i) {
+   const handleClick = (i) => {
 
     if (squares[i] || calculateWinner(squares)) {
       return
@@ -35,6 +52,15 @@ export default function Board() {
     setSquares(newSquareArray)
     setXIsNext(!xIsNext)
 
+  }
+
+
+  const winner = calculateWinner(squares)
+  let status
+  if (winner) {
+    status = "Winner: " + winner
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O")
   }
 
   return (
@@ -58,26 +84,7 @@ export default function Board() {
     </>
   )
 
-  function calculateWinner(squares) {
-    const winningCombinations = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],           
-      [0, 4, 8],           
-      [2, 4, 6],           
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8]
-    ]
 
-    for (let winningCombination of winningCombinations) {
-      const [a, b, c] = winningCombination
-      if (squares[a] && squares[a] == squares[b] && squares[a] == squares[c]) {
-        return squares[a]
-      }
-
-    }
-
-   return null  
-  }
 }
+
+export default Board
